@@ -1,0 +1,5 @@
+devices:
+  port8778:
+    type: proxy
+    listen: tcp:0.0.0.0:8778
+    connect: tcp:127.0.0.1:8778

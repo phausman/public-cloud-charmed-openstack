@@ -1,0 +1,9 @@
+devices:
+  port5000:
+    type: proxy
+    listen: tcp:0.0.0.0:5000
+    connect: tcp:127.0.0.1:5000
+  port35357:
+    type: proxy
+    listen: tcp:0.0.0.0:35357
+    connect: tcp:127.0.0.1:35357

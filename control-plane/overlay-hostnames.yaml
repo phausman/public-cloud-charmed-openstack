@@ -1,0 +1,45 @@
+applications:
+  
+  cinder:
+    options:
+      os-public-hostname:   control.openstack.hausman.pl
+      os-internal-hostname: control.openstack.hausman.pl
+      os-admin-hostname:    control.openstack.hausman.pl
+
+  glance:
+    options:
+      os-public-hostname:   control.openstack.hausman.pl
+      os-internal-hostname: control.openstack.hausman.pl
+      os-admin-hostname:    control.openstack.hausman.pl
+
+  keystone:
+    options:
+      os-public-hostname:   control.openstack.hausman.pl
+      os-internal-hostname: control.openstack.hausman.pl
+      os-admin-hostname:    control.openstack.hausman.pl
+
+  mysql:
+    options:
+      os-access-hostname:   control.openstack.hausman.pl
+
+  neutron-api:
+    options:
+      os-public-hostname:   control.openstack.hausman.pl
+      os-internal-hostname: control.openstack.hausman.pl
+      os-admin-hostname:    control.openstack.hausman.pl
+
+  nova-cloud-controller:
+    options:
+      os-public-hostname:   control.openstack.hausman.pl
+      os-internal-hostname: control.openstack.hausman.pl
+      os-admin-hostname:    control.openstack.hausman.pl
+
+  openstack-dashboard:
+    options:
+      os-public-hostname:   control.openstack.hausman.pl
+
+  placement:
+    options:
+      os-public-hostname:   control.openstack.hausman.pl
+      os-internal-hostname: control.openstack.hausman.pl
+      os-admin-hostname:    control.openstack.hausman.pl

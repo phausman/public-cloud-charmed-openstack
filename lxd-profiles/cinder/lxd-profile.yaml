@@ -1,0 +1,5 @@
+devices:
+  port8776:
+    type: proxy
+    listen: tcp:0.0.0.0:8776
+    connect: tcp:127.0.0.1:8776

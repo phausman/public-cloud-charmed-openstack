@@ -1,0 +1,5 @@
+devices:
+  port80:
+    type: proxy
+    listen: tcp:0.0.0.0:80
+    connect: tcp:127.0.0.1:80

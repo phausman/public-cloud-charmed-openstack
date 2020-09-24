@@ -1,0 +1,80 @@
+# Public Cloud Charmed OpenStack Compute Nodes bundle
+
+machines:
+  '0':
+    series: bionic
+  '1':
+    series: bionic
+
+saas:
+  rabbitmq-server:
+    url: aws-controller:admin/openstack.rabbitmq-server
+  glance:
+    url: aws-controller:admin/openstack.glance
+  nova-cloud-controller:
+    url: aws-controller:admin/openstack.nova-cloud-controller
+  neutron-api:
+    url: aws-controller:admin/openstack.neutron-api
+
+relations:
+# Local relations
+- - nova-compute:neutron-plugin
+  - neutron-openvswitch:neutron-plugin
+- - ntp:juju-info
+  - nova-compute:juju-info
+- - ntp:juju-info
+  - neutron-gateway:juju-info
+
+# Cross model relations
+
+# rabbimq-server relations
+- [ "rabbitmq-server", "neutron-gateway:amqp" ]
+- [ "rabbitmq-server", "nova-compute:amqp" ]
+- [ "rabbitmq-server", "neutron-openvswitch:amqp" ]
+
+# glance relations
+- [ "glance", "nova-compute:image-service" ]
+ 
+# nova-cloud-controller relations
+- [ "nova-cloud-controller", "nova-compute:cloud-compute" ]
+- [ "nova-cloud-controller", "neutron-gateway:quantum-network-service" ]
+ 
+# neutron-api relations
+- [ "neutron-api", "neutron-openvswitch:neutron-plugin-api" ]
+- [ "neutron-api", "neutron-gateway:neutron-plugin-api" ]
+
+
+series: bionic
+
+services:
+
+  neutron-gateway:
+    charm: cs:neutron-gateway-276
+    num_units: 1
+    options:
+      bridge-mappings: physnet1:br-ex
+      data-port: br-ex:ens7
+      openstack-origin: cloud:bionic-train
+      worker-multiplier: 0.25
+    to:
+    - '0'
+
+  neutron-openvswitch:
+    charm: cs:neutron-openvswitch-269
+    num_units: 0
+  
+  nova-compute:
+    charm: cs:nova-compute-309
+    num_units: 1
+    options:
+      config-flags: default_ephemeral_format=ext4
+      enable-live-migration: true
+      enable-resize: true
+      migration-auth-type: ssh
+      openstack-origin: cloud:bionic-train
+    to:
+    - '1'
+  
+  ntp:
+    charm: cs:ntp-36
+    num_units: 0

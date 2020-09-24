@@ -1,0 +1,36 @@
+# Public Cloud Charmed OpenStack Control Plane offers
+
+applications:
+
+  glance:
+    offers:
+      glance:
+        endpoints:
+        - image-service
+        acl:
+          admin: admin
+
+  neutron-api:
+    offers:
+      neutron-api:
+        endpoints:
+        - neutron-plugin-api
+        acl:
+          admin: admin
+
+  nova-cloud-controller:
+    offers:
+      nova-cloud-controller:
+        endpoints:
+        - cloud-compute
+        - quantum-network-service
+        acl:
+          admin: admin
+
+  rabbitmq-server:
+    offers:
+      rabbitmq-server:
+        endpoints:
+        - amqp
+        acl:
+          admin: admin
