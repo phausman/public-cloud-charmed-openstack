@@ -3,8 +3,6 @@
 machines:
   '0':
     series: bionic
-  '1':
-    series: bionic
 
 saas:
   rabbitmq-server:
@@ -22,13 +20,10 @@ relations:
   - neutron-openvswitch:neutron-plugin
 - - ntp:juju-info
   - nova-compute:juju-info
-- - ntp:juju-info
-  - neutron-gateway:juju-info
 
 # Cross model relations
 
 # rabbimq-server relations
-- [ "rabbitmq-server", "neutron-gateway:amqp" ]
 - [ "rabbitmq-server", "nova-compute:amqp" ]
 - [ "rabbitmq-server", "neutron-openvswitch:amqp" ]
 
@@ -37,31 +32,20 @@ relations:
  
 # nova-cloud-controller relations
 - [ "nova-cloud-controller", "nova-compute:cloud-compute" ]
-- [ "nova-cloud-controller", "neutron-gateway:quantum-network-service" ]
  
 # neutron-api relations
 - [ "neutron-api", "neutron-openvswitch:neutron-plugin-api" ]
-- [ "neutron-api", "neutron-gateway:neutron-plugin-api" ]
-
 
 series: bionic
 
 services:
 
-  neutron-gateway:
-    charm: cs:neutron-gateway-276
-    num_units: 1
-    options:
-      bridge-mappings: physnet1:br-ex
-      data-port: br-ex:ens7
-      openstack-origin: cloud:bionic-train
-      worker-multiplier: 0.25
-    to:
-    - '0'
-
   neutron-openvswitch:
     charm: cs:neutron-openvswitch-269
     num_units: 0
+    options:
+      use-dvr-snat: True
+      enable-local-dhcp-and-metadata: True
   
   nova-compute:
     charm: cs:nova-compute-309
@@ -73,7 +57,7 @@ services:
       migration-auth-type: ssh
       openstack-origin: cloud:bionic-train
     to:
-    - '1'
+    - '0'
   
   ntp:
     charm: cs:ntp-36

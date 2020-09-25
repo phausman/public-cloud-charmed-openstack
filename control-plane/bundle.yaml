@@ -58,6 +58,10 @@ applications:
       neutron-security-groups: true
       openstack-origin: cloud:bionic-train
       worker-multiplier: 0.25
+      enable-dvr: True
+      max-l3-agents-per-router: 1
+      allow-automatic-l3agent-failover: True
+      dhcp-agents-per-network: 1
     to:
     - lxd:0
 
@@ -77,6 +81,8 @@ applications:
     options:
       openstack-origin: cloud:bionic-train
       webroot: "/"
+      neutron-network-lb: False
+      neutron-network-dvr: True
     to:
     - lxd:0
   
