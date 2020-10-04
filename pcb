@@ -1,0 +1,76 @@
+#!/bin/bash
+
+set -e 
+
+main()
+{
+    echo "Installing juju..."
+    sudo snap install juju --classic
+    sudo snap install juju-wait --classic
+    echo -e "Juju installed successfully\n"
+
+    echo "Bootstrapping local juju controller..."
+    juju bootstrap localhost lxc-controller
+    echo -e "Local juju controller bootstrapped successfully\n"
+
+    echo "Renaming lxdbr0..."
+    sudo ip link set dev lxdbr0 down
+    sudo ip link set lxdbr0 name mylxdbr0
+    sudo ip link set dev mylxdbr0 up
+    echo -e "Renamed lxdbr0 to mylxdbr0 successfully\n"
+
+    echo "Generating local SSH key"
+    # Generate SSH key
+    ssh-keygen -q -N "" -f /home/ubuntu/.ssh/id_rsa
+    
+    # Add the key to authorized_keys so that juju controller
+    # can SSH to this machine without a password
+    cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+
+    # Disable strict host checking
+    echo -e "Host *\nStrictHostKeyChecking no" >> ~/.ssh/config
+    echo -e "SSH key successfully generated and added to ~/.ssh/authorized_keys\n"
+
+    echo "Adding local machine to juju..."
+    # Get the primary IP address of the node
+    IP=$(ip route get 8.8.8.8 | head -1 | cut -d' ' -f7)
+    
+    # Add local machine to juju
+    juju add-machine ssh:ubuntu@${IP}
+    echo -e "Local machine added to juju successfully\n"
+
+    echo "Registering local juju controller into centralised juju controller..."
+    echo "Registration string: $1"
+    juju register $1
+    echo -e "Local juju controller successfully registered into centralised juju controller..."
+
+    echo "Downloading compute juju bundle..."
+    curl https://raw.githubusercontent.com/phausman/public-cloud-charmed-openstack/master/compute-plane/bundle.yaml \
+      --output bundle.yaml
+    echo -e "Compute juju bundle successfully downloaded\n"
+
+    echo "Deploying compute juju bundle..."
+    juju switch lxc-controller:default
+    juju deploy ./bundle.yaml --map-machines=existing,0=0
+    echo -e "Compute juju bundle deployed successfully\n"
+
+    echo "Waiting for deployment process to complete..."
+    juju-wait --model default --verbose
+    juju status
+    echo -e "Deployment process completed successfully"
+}
+
+
+print_usage()
+{
+    echo "Usage: $0 join <registration-sting>"
+}
+
+
+if [ "$#" -ne 2 ]; then
+    echo "ERROR $0: invalid options provided"
+    print_usage
+    exit 1
+fi
+
+main $2
