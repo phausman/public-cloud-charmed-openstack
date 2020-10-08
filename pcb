@@ -4,22 +4,25 @@ set -e
 
 main()
 {
-    echo "Installing juju..."
+    bold=$(tput bold)
+    normal=$(tput sgr0)
+
+    echo "${bold}Step 1 of 9: Installing juju...${normal}"
     sudo snap install juju --classic
     sudo snap install juju-wait --classic
     echo -e "Juju installed successfully\n"
 
-    echo "Bootstrapping local juju controller..."
+    echo "${bold}Step 2 of 9: Bootstrapping local juju controller...${normal}"
     juju bootstrap localhost lxc-controller
     echo -e "Local juju controller bootstrapped successfully\n"
 
-    echo "Renaming lxdbr0..."
+    echo "${bold}Step 3 of 9: Renaming lxdbr0...${normal}"
     sudo ip link set dev lxdbr0 down
     sudo ip link set lxdbr0 name mylxdbr0
     sudo ip link set dev mylxdbr0 up
     echo -e "Renamed lxdbr0 to mylxdbr0 successfully\n"
 
-    echo "Generating local SSH key"
+    echo "${bold}Step 4 of 9: Generating local SSH key${normal}"
     # Generate SSH key
     ssh-keygen -q -N "" -f /home/ubuntu/.ssh/id_rsa
     
@@ -31,7 +34,7 @@ main()
     echo -e "Host *\nStrictHostKeyChecking no" >> ~/.ssh/config
     echo -e "SSH key successfully generated and added to ~/.ssh/authorized_keys\n"
 
-    echo "Adding local machine to juju..."
+    echo "${bold}Step 5 of 9: Adding local machine to juju controller...${normal}"
     # Get the primary IP address of the node
     IP=$(ip route get 8.8.8.8 | head -1 | cut -d' ' -f7)
     
@@ -39,25 +42,27 @@ main()
     juju add-machine ssh:ubuntu@${IP}
     echo -e "Local machine added to juju successfully\n"
 
-    echo "Registering local juju controller into centralised juju controller..."
-    echo "Registration string: $1"
+    echo "${bold}Step 6 of 9: Registering local juju controller into centralised juju controller...${normal}"
     juju register $1
     echo -e "Local juju controller successfully registered into centralised juju controller..."
 
-    echo "Downloading compute juju bundle..."
+    echo "${bold}Step 7 of 9: Downloading compute juju bundle..."
     curl https://raw.githubusercontent.com/phausman/public-cloud-charmed-openstack/master/compute-plane/bundle.yaml \
       --output bundle.yaml
     echo -e "Compute juju bundle successfully downloaded\n"
 
-    echo "Deploying compute juju bundle..."
+    echo "${bold}Step 8 of 9: Deploying compute juju bundle...${normal}"
     juju switch lxc-controller:default
     juju deploy ./bundle.yaml --map-machines=existing,0=0
     echo -e "Compute juju bundle deployed successfully\n"
 
-    echo "Waiting for deployment process to complete..."
+    echo "${bold}Step 9 of 9: Waiting for deployment process to complete...${normal}"
     juju-wait --model default --verbose
     juju status
-    echo -e "Deployment process completed successfully"
+    echo -e "Deployment process completed successfully\n"
+
+    echo -e "SUCCESS: This machine has been successfully " \
+      "enlisted in OpenStack as a compute node!"
 }
 
 
