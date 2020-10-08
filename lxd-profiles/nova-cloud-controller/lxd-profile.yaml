@@ -3,3 +3,7 @@ devices:
     type: proxy
     listen: tcp:0.0.0.0:8774
     connect: tcp:127.0.0.1:8774
+  port6080:
+    type: proxy
+    listen: tcp:0.0.0.0:6080
+    connect: tcp:127.0.0.1:6080
