@@ -1068,9 +1068,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.4142136"
-     inkscape:cx="196.79776"
-     inkscape:cy="480.70619"
+     inkscape:zoom="5.6568544"
+     inkscape:cx="236.88712"
+     inkscape:cy="642.92433"
      inkscape:document-units="mm"
      inkscape:current-layer="layer2"
      showgrid="false"
@@ -1113,7 +1113,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -1328,7 +1328,7 @@
          y="70.406593"
          x="70.440224"
          sodipodi:role="line"
-         id="tspan13037">amqp, mysql</tspan></text>
+         id="tspan13037">amqp</tspan></text>
     <rect
        y="64.650009"
        x="85.349991"
