@@ -46,7 +46,7 @@ main()
     juju register $1
     echo -e "Local juju controller successfully registered into centralised juju controller..."
 
-    echo "${bold}Step 7 of 9: Downloading compute juju bundle..."
+    echo "${bold}Step 7 of 9: Downloading compute juju bundle...${normal}"
     curl https://raw.githubusercontent.com/phausman/public-cloud-charmed-openstack/master/compute-plane/bundle.yaml \
       --output bundle.yaml
     echo -e "Compute juju bundle successfully downloaded\n"
